@@ -1,5 +1,11 @@
 The correct results for each sample file and data file:
 
+1a, sample: 514579
+1a, data: 996996
+1b, sample: 241861950
+1b, data: 9210402
+2a, sample: 2
+2a, data: 284
 7a, sample: 4
 7a, data: 265
 7b, sample: 32

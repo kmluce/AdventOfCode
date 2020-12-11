@@ -5,7 +5,7 @@ class JoltAdapters():
         self.adapterList =[0]
         self.oneJolt = 0
         self.threeJolts = 0
-        self.memoization = [0]
+        self.memoArray = [0]
 
     def read_adapters(self):
         for line in fileinput.input():
@@ -31,8 +31,23 @@ class JoltAdapters():
         print("Product of one jolt and three jolt: ", self.oneJolt * self.threeJolts)
 
     def memoization(self):
-        for i in range(len(self.adapterList), -1, -1):
-            print("i is: ", i)
+        for i in range(len(self.adapterList) -1):
+            self.memoArray.append(0)
+        #print("setting memo array ", len(self.adapterList)-1, "to 1")
+        self.memoArray[len(self.adapterList)-1] = 1
+        #print(self.memoArray)
+        for i in range(len(self.adapterList )-2, -1, -1):
+            for j in range(i+1, i+4):
+                if j >= len(self.adapterList):
+                    pass
+                else:
+                    #print('checking for array indexes ', i, ",", j, "with values ", self.adapterList[i], ",", self.adapterList[j])
+                    if (self.adapterList[j] - self.adapterList[i]) <= 3:
+                        self.memoArray[i] += self.memoArray[j]
+        print(self.adapterList)
+        print(self.memoArray)
+        return(self.memoArray[0])
+
 
 
 if __name__ == '__main__':
@@ -40,4 +55,5 @@ if __name__ == '__main__':
 
     adapters.read_adapters()
     adapters.print_adapters()
-    adapters.check_jolts()
+    #adapters.check_jolts()
+    print(adapters.memoization())

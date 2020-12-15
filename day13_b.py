@@ -23,12 +23,12 @@ class BusSchedule():
             if element == 'x':
                 pass
             else:
-                print(" element is ", element)
+                #print(" element is ", element)
                 self.buses.append(int(element))
                 self.busOffsets.append(i)
                 if int(element) >= self.buses[self.maxBusIndex]:
                     self.maxBusIndex = len(self.buses) - 1
-                print("max bus is ", self.buses[self.maxBusIndex])
+                #print("max bus is ", self.buses[self.maxBusIndex])
 
     def input_schedule(self):
         for line in fileinput.input():
@@ -43,23 +43,21 @@ class BusSchedule():
 
     def test_bus_schedules(self):
         match = True
-        while True:
-            self.baseTime = (self.testMultiple * self.buses[self.maxBusIndex]) - self.busOffsets[self.maxBusIndex]
-            #print("Test:", self.testMultiple, " with base time", self.baseTime)
-            for i, element in enumerate(self.buses):
-            #    print("checking to see if ", self.baseTime + self.busOffsets[i],
-            #          " mod ", element, " is zero")
-                if not (self.baseTime + self.busOffsets[i]) % element == 0:
-                   match = False
-                   break
-            if match == True:
-                print (" found working schedule at ", self.baseTime)
-                return
-            else:
-                match = True
-            self.testMultiple +=1
-            if self.testMultiple > 1000000000000:
-                break
+        lastMatch = 0
+        timeIncrement = self.buses[0]
+        print("offset for bus ", self.buses[0], " is ", self.busOffsets[0])
+        for i, bus in enumerate(self.buses):
+            print(" Testing", bus, "with increment", timeIncrement, "starting at base time", self.baseTime)
+            if i == 0:
+                continue
+            while True:
+                self.baseTime += timeIncrement
+                print("  Testing to see if", self.baseTime, "+ offset", self.busOffsets[i], "mod", bus, "==0")
+                if (self.baseTime + self.busOffsets[i]) % bus == 0:
+                    timeIncrement *= bus
+                    break
+        print("Found result at time", self.baseTime)
+
 
 
 if __name__ == '__main__':

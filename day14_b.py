@@ -52,11 +52,21 @@ class DockingData():
                 print(f'memLocList[0] after &| is: {self.memLocList[0]:>036b}')
                 stringCount = 1
                 tempLocList = []
+                # OK, here's what this bit of code does, since I'm sure I won't remember it later.
+                # Above, we calculated the ones bitmask for the fixed 1s above
+                # (and the mask for the fixed zeros, which we don't use in this problem)
+                # we also applied the ones bitmask above to the memory location just read in.
+                #
+                # Now, we go through the current mask from least significant digit to most.  Every
+                # time we hit a floating bit, we apply its 1s bitmask directly to any locations in
+                # the list, then also ADD to the list (at the end, to avoid iterating over new
+                # values) the memory location anded to the complement of the above bitmask (the zeros
+                # bitmask)
                 for c in reversed(self.currentMask):
                     if c == 'X':
                         for i, location in enumerate(self.memLocList):
-                            self.memLocList[i] = location | stringCount
-                            tempLocList.append(location & (~stringCount & self.maskAnd))
+                            self.memLocList[i] = location | stringCount    # ones bitmask is or'd
+                            tempLocList.append(location & (~stringCount & self.maskAnd))  # zeros bitmask is anded
                         self.memLocList.extend(tempLocList)
                         tempLocList = []
                         print("stringCount is ", stringCount, "and loclist is", self.memLocList)

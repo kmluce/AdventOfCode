@@ -1,4 +1,6 @@
 import fileinput
+import re
+import string
 
 class OperationOrder():
     def __init__(self):
@@ -8,61 +10,84 @@ class OperationOrder():
         self.currRight = 0
         self.currOp = ''
 
-    def printStack(self):
+    def print_stack(self):
         print(" Stack:", self.operationStack)
 
-    def sum(self, left, op, right):
+    def sum(self, left, right):
         return(int(left) + int(right))
 
-    def multiply(self, left, op, right):
+    def multiply(self, left, right):
         return(int(left) * int(right))
 
-    def processLine(self, line):
+    def add_token_to_stack(self, token):
+        self.operationStack.append(token)
+        self.print_stack()
+
+    def process_stack(self):
+        iterate = True
+        while iterate == True:
+            if len(self.operationStack) < 3:
+                print("  stack length is less than 3, no operations possible")
+                iterate = False
+                break
+            elif self.operationStack[-1] == '+' or self.operationStack[-1] == '-' or self.operationStack[-1] == '(':
+                print("  most recent token is an operator, no operations possible")
+                iterate = False
+                break
+            elif self.operationStack[-1] == ')':
+                print("  most recent token is close paren, trying to close the paren")
+                if self.operationStack[-3] == '(':
+                    self.operationStack.pop()
+                    value = self.operationStack.pop()
+                    self.operationStack.pop()
+                    self.operationStack.append(value)
+                    self.print_stack()
+            elif self.operationStack[-2] == '+':
+                print("  next most recent token is +, adding")
+                right = self.operationStack.pop()
+                right = int(right)
+                self.operationStack.pop()
+                left = self.operationStack.pop()
+                left = int(left)
+                self.operationStack.append(self.sum(left, right))
+                self.print_stack()
+            elif self.operationStack[-2] == '*':
+                print("  next most recent token is *, multiplying")
+                right = self.operationStack.pop()
+                right = int(right)
+                self.operationStack.pop()
+                left = self.operationStack.pop()
+                left = int(left)
+                self.operationStack.append(self.multiply(left, right))
+                self.print_stack()
+            else:
+                iterate = False
+                break
+
+
+    def process_line(self, line):
         line = line.rstrip()
         print(line)
+        line = re.sub('([()])', r' \1 ', line)
+        print("line is:", line)
         fields = line.split()
         for token in fields:
-            print("processing token:", token)
-            if token == '+':
-                self.operationStack.append(token)
-                self.printStack()
-            elif token == '*':
-                self.operationStack.append(token)
-                self.printStack()
-            elif token == '(':
-                self.operationStack.append(token)
-                self.printStack()
-            else:
-                # must be a number
-                token = int(token)
-                if len(self.operationStack) >= 2:
-                    if self.operationStack[-1] == '+':
-                        self.currRight = token
-                        self.currOp = self.operationStack.pop()
-                        self.currLeft = self.operationStack.pop()
-                        self.printStack()
-                        print("  Preparing to add", self.currLeft, self.currOp, self.currRight)
-                        self.operationStack.append(self.sum(self.currLeft, self.currOp, self.currRight))
-                        self.printStack()
-                    elif self.operationStack[-1] == '*':
-                        self.currRight = token
-                        self.currOp = self.operationStack.pop()
-                        self.currLeft = self.operationStack.pop()
-                        self.printStack()
-                        print("  Preparing to add", self.currLeft, self.currOp, self.currRight)
-                        self.operationStack.append(self.multiply(self.currLeft, self.currOp, self.currRight))
-                        self.printStack()
-                else:
-                    self.operationStack.append(token)
-                    self.printStack()
+            currToken = token
+            print("processing token:", currToken)
+            self.add_token_to_stack(currToken)
+            self.process_stack()
+        return self.operationStack.pop()
 
-    def readLines(self):
+    def read_lines(self):
+        total = 0
         for line in fileinput.input():
             line = line.rstrip()
             self.currentLine = line
-            self.processLine(line)
+            total += self.process_line(line)
+            self.__init__()
+        print("total value is", total)
 
 
 if __name__ == '__main__':
     homework1 = OperationOrder()
-    homework1.readLines()
+    homework1.read_lines()

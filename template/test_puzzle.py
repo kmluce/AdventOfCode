@@ -16,7 +16,7 @@ class MyTestCase(unittest.TestCase):
 #        self.assertEqual(0, answer)
 
 #    def test_demob(self):
-#        demob = Puzzle("demo.txt")
+#        demob = Puzzle("demo_data.txt")
 #        demob.parse()
 #        answer = demob.solveb()
 #        self.assertEqual(0, answer)

@@ -1,19 +1,18 @@
 import unittest
 from puzzle import Puzzle
 
-
 class MyTestCase(unittest.TestCase):
     def test_demoa(self):
         demoa = Puzzle("demo_data.txt")
-        demoa.parsea()
+        demoa.parse()
         answer = demoa.solvea()
-        self.assertEqual(0, answer)
+        self.assertEqual(150, answer)
 
-#    def test_fulla(self):
-#        fulla = Puzzle("test_data.txt")
-#        fulla.parse()
-#        answer = fulla.solvea()
-#        self.assertEqual(0, answer)
+    def test_fulla(self):
+        fulla = Puzzle("test_data.txt")
+        fulla.parse()
+        answer = fulla.solvea()
+        self.assertEqual(0, answer)
 
 #    def test_demob(self):
 #        demob = Puzzle("demo.txt")

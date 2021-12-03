@@ -5,7 +5,7 @@ from puzzle import Puzzle
 class MyTestCase(unittest.TestCase):
     def test_demoa(self):
         demoa = Puzzle("demo_data.txt")
-        demoa.parsea()
+        demoa.parse()
         answer = demoa.solvea()
         self.assertEqual(0, answer)
 
@@ -26,6 +26,7 @@ class MyTestCase(unittest.TestCase):
 #        fullb.parse()
 #        answer = fullb.solveb()
 #        self.assertEqual(0, answer)
+
 
 if __name__ == '__main__':
     unittest.main()

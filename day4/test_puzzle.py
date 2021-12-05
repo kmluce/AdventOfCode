@@ -15,17 +15,17 @@ class MyTestCase(unittest.TestCase):
         answer = fulla.solvea()
         self.assertEqual(11536, answer)
 
-#    def test_demob(self):
-#        demob = Puzzle("demo_data.txt")
-#        demob.parse()
-#        answer = demob.solveb()
-#        self.assertEqual(0, answer)
+    def test_demob(self):
+        demob = Puzzle("demo_data.txt")
+        demob.parse()
+        answer = demob.solveb()
+        self.assertEqual(1924, answer)
 
-#    def test_fullb(self):
-#        fullb = Puzzle("test_data.txt")
-#        fullb.parse()
-#        answer = fullb.solveb()
-#        self.assertEqual(0, answer)
+    def test_fullb(self):
+        fullb = Puzzle("test_data.txt")
+        fullb.parse()
+        answer = fullb.solveb()
+        self.assertEqual(1284, answer)
 
 
 if __name__ == '__main__':

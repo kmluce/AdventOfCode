@@ -33,7 +33,7 @@ class Puzzle:
         self.allBingos.append(self.currBingo)
         x: object
         # self.allBingos = [ x for x in self.allBingos if x]
-        self.print_bingo()
+        #self.print_bingo()
 
     def print_bingo(self):
         print("called numbers are", self.calledNumbers)
@@ -47,6 +47,7 @@ class Puzzle:
         self.new_list = [[[-1 if b == my_call else b for b in a] for a in c] for c in self.allBingos]
         self.allBingos = self.new_list
 
+    # returns the index of the winning bingo card, or -1 if none is currently winning
     def check_win(self) -> int:
         for bingo_card in self.allBingos:
             curr_index = self.allBingos.index(bingo_card)
@@ -81,8 +82,35 @@ class Puzzle:
             if result != -1:
                 winning_no = x
                 break
-        print("matching bingo card is #", result, ",winning_no is", winning_no)
+        #print("matching bingo card is #", result, ",winning_no is", winning_no)
         card_sum = self.sum_bingo(result)
-        print("card sum is ", card_sum)
-        self.print_bingo()
+        #print("card sum is ", card_sum)
+        #self.print_bingo()
+        return card_sum * winning_no
+
+    def solveb(self):
+        global result
+        winning_no = -1
+        # iterating through all of the bingo numbers called as x
+        for x in self.calledNumbers:
+            result = -1
+            # print ("marking cards for bingo call", x)
+            self.mark_called(x)
+            result = self.check_win()
+            if len(self.allBingos) == 1 and result != -1:
+                winning_no=x
+                break
+            while result != -1:
+                winning_no = x
+                if len(self.allBingos) == 1:
+                    break
+                else:
+                    self.allBingos.pop(result)
+                    result = self.check_win()
+                    #print("popped a card, number of cards remaining is:", len(self.allBingos))
+        #print("number of cards remaining is:", len(self.allBingos))
+        #print("matching bingo card is #", result, ",winning_no is", winning_no)
+        card_sum = self.sum_bingo(result)
+        #print("card sum is ", card_sum)
+        #self.print_bingo()
         return card_sum * winning_no

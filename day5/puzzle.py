@@ -74,3 +74,61 @@ class Puzzle:
         intersections = [i for line in self.grid for i in line if i >= 2]
         print(intersections)
         return len([i for line in self.grid for i in line if i >= 2])
+
+    def solveb(self):
+        self.grid = [[0 for i in range(self.max_y+1)] for j in range(self.max_x+1)]
+        for line in self.line_coords:
+            print ("drawing line for line:", line)
+            x1 = line[0]
+            x2 = line[2]
+            y1 = line[1]
+            y2 = line[3]
+            if x1 - x2 == 0:  #slope is vertical
+                print("vertical line")
+                if y2 < y1:
+                    step = -1
+                    extent = y2-1
+                else:
+                    step = 1
+                    extent = y2 + 1
+                for i in range(y1, extent, step):
+                    print("incrementing grid", [i], x1 )
+                    self.grid[i][x1] += 1
+            elif y1 -y2 == 0:
+                print("horizontal line")
+                if x2 < x1:
+                    step = -1
+                    extent = x2 - 1
+                else:
+                    step = 1
+                    extent = x2 + 1
+                for i in range(x1, extent, step):
+                    print("incrementing grid", y1, [i] )
+                    self.grid[y1][i] += 1
+            elif (x1 - x2) == (y1 -y2):
+                print("diagonal line", y2)
+                if x2 < x1:
+                    x_step = -1
+                    x_extent = x2 - 1
+                else:
+                    x_step = 1
+                    x_extent = x2 + 1
+                if y2 < y1:
+                    y_step = -1
+                    y_extent = y2 - 1
+                else:
+                    y_step = 1
+                    y_extent = y2 + 1
+                x = x1
+                print("diagonal range from ", y1, "to", y_extent, "by", y_step)
+                for y in range(y1, y_extent, y_step):
+        #           for x in range(x1, x_extent, x_step):
+                    print("incrementing grid", y, x)
+                    self.grid[y][x] += 1
+                    x += x_step
+            else:
+                print("slope not horizontal, vertical, or diagonal for", line)
+        self.print_object()
+        intersections = [i for line in self.grid for i in line if i >= 2]
+        print(intersections)
+        return len([i for line in self.grid for i in line if i >= 2])

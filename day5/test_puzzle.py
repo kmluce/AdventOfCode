@@ -19,13 +19,13 @@ class MyTestCase(unittest.TestCase):
         demob = Puzzle("demo_data.txt")
         demob.parse()
         answer = demob.solveb()
-        self.assertEqual(0, answer)
+        self.assertEqual(12, answer)
 
-#    def test_fullb(self):
-#        fullb = Puzzle("test_data.txt")
-#        fullb.parse()
-#        answer = fullb.solveb()
-#        self.assertEqual(0, answer)
+    def test_fullb(self):
+        fullb = Puzzle("test_data.txt")
+        fullb.parse()
+        answer = fullb.solveb()
+        self.assertEqual(0, answer)
 
 
 if __name__ == '__main__':

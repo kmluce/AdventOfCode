@@ -17,11 +17,11 @@ class Puzzle:
         print("count list is:", self.lanternfish_count)
 
 
-    def solvea(self):
+    def solvea(self, days):
         zeros = 0
         num_new_fish = 0
         updated_fish = []
-        for i in range(80):
+        for i in range(days):
             #print("iteration", i)
             zeros = self.lanternfish_count.pop(0)
             self.lanternfish_count[6] += zeros

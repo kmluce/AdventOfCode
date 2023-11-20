@@ -1,6 +1,6 @@
 class PrintDebug:
 
-    def __init__(self, debug_level, indent=0):
+    def __init__(self, debug_level=0, indent=0):
         self.debug_level = debug_level
         self.indent = indent
 

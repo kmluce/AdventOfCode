@@ -15,8 +15,21 @@ class MyTestCase(unittest.TestCase):
                              [0, 0, 0, 0, 0, 0, 0],
                              [0, 0, 0, 0, 0, 0, 0],
                              [0, 0, 0, 0, 0, 0, 0]])
-        test_a = Puzzle("demo_data1.txt", "a", 1, 2022)
+        test_a = Puzzle("demo_data1.txt", "a", 7, 2022)
         self.assertTrue(np.array_equal(result_a, test_a.test_setup()))
+
+    def test_stringify_array(self):
+        result_a = """[[0100000]
+[1110000]
+[0100000]
+[0000000]
+[0000000]
+[0000000]
+[0000000]
+[0000000]]"""
+        my_map = DropMap(7, 8)
+        my_map.add_rock_to_map(1, 0, 0)
+        self.assertEqual(result_a, my_map.stringify())
 
     def test_is_collision_complete_overlap(self):
         my_map = DropMap(7, 8)
@@ -40,27 +53,27 @@ class MyTestCase(unittest.TestCase):
 
     # @unittest.skip("Skipping testing part A with demo data, not yet implemented")
     def test_demo_part_a(self):
-        demo_a = Puzzle("demo_data1.txt", "a", 0, 2022)
+        demo_a = Puzzle("demo_data1.txt", "a", 1, 2022)
         answer = demo_a.solve()
         self.assertEqual(3068, answer)
 
     # @unittest.skip("Skipping testing part A with real data, not yet implemented")
     def test_part_a(self):
-        part_a = Puzzle("test_data.txt", "a", 0, 2022)
+        part_a = Puzzle("test_data.txt", "a", 1, 2022)
         answer = part_a.solve()
         self.assertEqual(3127, answer)
 
-    @unittest.skip("Skipping testing part B with demo data, not yet implemented")
+    # @unittest.skip("Skipping testing part B with demo data, not yet implemented")
     def test_demo_part_b(self):
-        demo_b = Puzzle("demo_data1.txt", "b", 0, 1000000000000)
+        demo_b = Puzzle("demo_data1.txt", "b", 1, 1000000000000)
         answer = demo_b.solve()
-        self.assertEqual(-1, answer)
+        self.assertEqual(1514285714288, answer)
 
-    @unittest.skip("Skipping testing part B with real data, not yet implemented")
+    # @unittest.skip("Skipping testing part B with real data, not yet implemented")
     def test_part_b(self):
-        part_b = Puzzle("test_data.txt", "b", 1, 2022)
+        part_b = Puzzle("test_data.txt", "b", 1, 1000000000000)
         answer = part_b.solve()
-        self.assertEqual(-1, answer)
+        self.assertEqual(1542941176480, answer)
 
 
 if __name__ == '__main__':

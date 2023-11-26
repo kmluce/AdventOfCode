@@ -56,6 +56,7 @@ class DropMap:
 
     def stringify(self, num_rows=10):
         return np.array2string(self.map[-num_rows:, :]).replace(" ", "")
+
     def drop_rock(self):
         self.debugContext.print(4, "printing map before padding")
         self.print()
@@ -87,7 +88,7 @@ class DropMap:
             rock_width, rock_height = self.get_rock_size(curr_rock_index)
             rock_y = self.max_height + 3
             rock_x = 2
-# define initial state tuple
+            # define initial state tuple
             drop_initial_state = (curr_rock_index, beginning_jet_index, self.stringify(50))
             self.debugContext.print(3, f"initial state is:  {drop_initial_state}")
 
@@ -128,7 +129,7 @@ class DropMap:
                     # break
                     else:
                         rock_x = rock_x - 1
-                if self.is_collision(curr_rock_index, rock_x, rock_y -1):
+                if self.is_collision(curr_rock_index, rock_x, rock_y - 1):
                     self.debugContext.print(4, f"rock collided on drop")
                     collision = True
                     break
@@ -151,7 +152,8 @@ class DropMap:
             else:
                 self.max_height_differential.append(0)
             # self.max_height = self.max_height + rock_height
-            self.debugContext.print(2, f"max height is now {self.max_height}, changed by {self.max_height_differential[-1]}")
+            self.debugContext.print(2,
+                                    f"max height is now {self.max_height}, changed by {self.max_height_differential[-1]}")
             if rock_drop_depth > self.max_drop:
                 self.max_drop = rock_drop_depth
             self.current_rock = self.current_rock + 1
@@ -162,16 +164,20 @@ class DropMap:
             self.cycle_end = self.current_rock
             self.cycle_begin = matching_cycle_indexes[0]
             self.cycle_length = self.cycle_end - self.cycle_begin
-            self.each_cycle_adds_height = sum(self.max_height_differential[self.cycle_begin : self.cycle_end + 1])
+            self.each_cycle_adds_height = sum(self.max_height_differential[self.cycle_begin: self.cycle_end + 1])
             self.debugContext.print(2, f"each cycle starts at {self.cycle_begin}, ends at {self.cycle_end},")
             self.debugContext.print(2, f"so is {self.cycle_length} long,")
             self.debugContext.print(2, f"and adds {self.each_cycle_adds_height} to the height")
-            height_from_cycles = (((self.num_rocks - 1) - self.current_rock) // self.cycle_length) * self.each_cycle_adds_height
-            num_leftover_rocks = (self.num_rocks - self.current_rock ) % self.cycle_length
+            height_from_cycles = (((
+                                               self.num_rocks - 1) - self.current_rock) // self.cycle_length) * self.each_cycle_adds_height
+            num_leftover_rocks = (self.num_rocks - self.current_rock) % self.cycle_length
             self.debugContext.print(2, f"num leftover rocks is {num_leftover_rocks}")
-            height_from_partial_cycle = sum(self.max_height_differential[self.cycle_begin : self.cycle_begin + ((self.num_rocks - self.current_rock) % self.cycle_length)])
-            self.debugContext.print(2, f"adding values from beginning of cycle to {self.cycle_begin + ((self.num_rocks - self.current_rock) % self.cycle_length)}")
-            self.debugContext.print(2, f"current height {self.max_height} + cycles {height_from_cycles} + {height_from_partial_cycle} =")
+            height_from_partial_cycle = sum(self.max_height_differential[self.cycle_begin: self.cycle_begin + (
+                        (self.num_rocks - self.current_rock) % self.cycle_length)])
+            self.debugContext.print(2,
+                                    f"adding values from beginning of cycle to {self.cycle_begin + ((self.num_rocks - self.current_rock) % self.cycle_length)}")
+            self.debugContext.print(2,
+                                    f"current height {self.max_height} + cycles {height_from_cycles} + {height_from_partial_cycle} =")
             self.max_height = self.max_height + height_from_cycles + height_from_partial_cycle
 
         self.debugContext.decrease_indent()
@@ -207,11 +213,11 @@ class DropMap:
                 else:
                     if self.rocks[rock][test_y][test_x] == 1:
                         tmp_map[y + test_y][x + test_x] = 2
-        self.debugContext.print(5,"")
+        self.debugContext.print(5, "")
         for i in range(tmp_map.shape[0] - 1, -1, -1):
-            #self.debugContext.print(5, tmp_map[i])
+            # self.debugContext.print(5, tmp_map[i])
             self.debugContext.print(5, ['#' if x == 1 else '@' if x == 2 else '.' for x in tmp_map[i].tolist()])
-        self.debugContext.print(5,"")
+        self.debugContext.print(5, "")
 
     # determines if there's a collision with the current pattern if rock x and rock y
     def is_collision(self, rock, x, y):
@@ -247,7 +253,7 @@ class DropMap:
                         if self.map[y + test_y - 1][x + test_x] == 1:
                             return True
                 elif self.rocks[rock][test_y][test_x] == 1:
-                    if self.map[y + test_y -1 ][x + test_x] == 1:
+                    if self.map[y + test_y - 1][x + test_x] == 1:
                         return True
         return False
 

@@ -1,7 +1,7 @@
 class Forest:
     def __init__(self):
         self.treemap = []
-        self.lvisible = []   # trees visible from left
+        self.l_visible = []  # trees visible from left
         self.scenic = []
 
     def add_line(self, line):
@@ -12,8 +12,8 @@ class Forest:
         print("treemap:")
         for line in self.treemap:
             print("  ", line)
-        print("lvisible:")
-        for line in self.lvisible:
+        print("l_visible:")
+        for line in self.l_visible:
             print("  ", line)
         print("scenic:")
         for line in self.scenic:
@@ -21,74 +21,73 @@ class Forest:
 
     def find_scenic(self):
         print("entering find_scenic")
-        self.scenic = [[0 for number in group] for group in self.treemap]
+        self.scenic = [[0 for _ in group] for group in self.treemap]
         self.print()
-        for treey in range(1, len(self.treemap) - 1):
+        for tree_y in range(1, len(self.treemap) - 1):
             for treex in range(1, len(self.treemap[0]) - 1):
-                dtrees = 0
-                utrees = 0
-                rtrees = 0
-                ltrees = 0
-                for curry in range(treey + 1, len(self.treemap)):
-                    dtrees += 1
-                    if self.treemap[curry][treex] >= self.treemap[treey][treex]:
+                d_trees = 0
+                u_trees = 0
+                r_trees = 0
+                l_trees = 0
+                for curr_y in range(tree_y + 1, len(self.treemap)):
+                    d_trees += 1
+                    if self.treemap[curr_y][treex] >= self.treemap[tree_y][treex]:
                         break
-                for curry in range(treey - 1, -1, -1):
-                    utrees += 1
-                    if self.treemap[curry][treex] >= self.treemap[treey][treex]:
+                for curr_y in range(tree_y - 1, -1, -1):
+                    u_trees += 1
+                    if self.treemap[curr_y][treex] >= self.treemap[tree_y][treex]:
                         break
-                for currx in range(treex + 1, len(self.treemap[0])):
-                    rtrees += 1
-                    if self.treemap[treey][currx] >= self.treemap[treey][treex]:
+                for curr_x in range(treex + 1, len(self.treemap[0])):
+                    r_trees += 1
+                    if self.treemap[tree_y][curr_x] >= self.treemap[tree_y][treex]:
                         break
-                for currx in range(treex - 1, -1, -1):
-                    ltrees += 1
-                    if self.treemap[treey][currx] >= self.treemap[treey][treex]:
+                for curr_x in range(treex - 1, -1, -1):
+                    l_trees += 1
+                    if self.treemap[tree_y][curr_x] >= self.treemap[tree_y][treex]:
                         break
-                self.scenic[treey][treex] = dtrees * utrees * ltrees * rtrees
-
+                self.scenic[tree_y][treex] = d_trees * u_trees * l_trees * r_trees
 
     def process_maps(self):
-        self.lvisible = [[0 for number in group] for group in self.treemap]
-    #    self.scenic = self.lvisible
+        self.l_visible = [[0 for _ in group] for group in self.treemap]
+        #    self.scenic = self.l_visible
         self.print()
-        # calculate leftwise
+        # calculate left-wise
         for j in range(0, len(self.treemap)):
             highest_left = self.treemap[j][0]
-            self.lvisible[j][0] = 1
+            self.l_visible[j][0] = 1
             for i in range(1, len(self.treemap[j])):
                 if self.treemap[j][i] > highest_left:
-                    self.lvisible[j][i] = 1 | self.lvisible[j][i]
+                    self.l_visible[j][i] = 1 | self.l_visible[j][i]
                     highest_left = self.treemap[j][i]
-        # calculate rightwise:
+        # calculate right-wise:
         for j in range(0, len(self.treemap)):
             highest_right = self.treemap[j][-1]
-            self.lvisible[j][-1] = 1
+            self.l_visible[j][-1] = 1
             for i in reversed(range(1, len(self.treemap[j]))):
                 if self.treemap[j][i] > highest_right:
-                    self.lvisible[j][i] = 1 | self.lvisible[j][i]
+                    self.l_visible[j][i] = 1 | self.l_visible[j][i]
                     highest_right = self.treemap[j][i]
         # calculate from above:
         for i in range(0, len(self.treemap[0])):  # counting on the map being rectangular, here
             highest_above = self.treemap[0][i]
-            self.lvisible[0][i] = 1
+            self.l_visible[0][i] = 1
             for j in range(1, len(self.treemap)):
                 if self.treemap[j][i] > highest_above:
-                    self.lvisible[j][i] = 1 | self.lvisible[j][i]
+                    self.l_visible[j][i] = 1 | self.l_visible[j][i]
                     highest_above = self.treemap[j][i]
         # calculate from below:
         for i in range(0, len(self.treemap[0])):  # counting on the map being rectangular, here
             highest_below = self.treemap[-1][i]
-            self.lvisible[-1][i] = 1
+            self.l_visible[-1][i] = 1
             for j in reversed(range(1, len(self.treemap))):
                 if self.treemap[j][i] > highest_below:
-                    self.lvisible[j][i] = 1 | self.lvisible[j][i]
+                    self.l_visible[j][i] = 1 | self.l_visible[j][i]
                     highest_below = self.treemap[j][i]
         self.print()
 
     def visible_trees(self):
         tree_total = 0
-        for i in self.lvisible:
+        for i in self.l_visible:
             tree_total = tree_total + sum(i)
         return tree_total
 

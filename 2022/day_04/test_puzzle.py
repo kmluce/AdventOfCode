@@ -25,7 +25,7 @@ class MyTestCase(unittest.TestCase):
         partb = Puzzle("test_data.txt", "b")
         partb.parse()
         answer = partb.solve()
-        self.assertEqual(-1, answer)
+        self.assertEqual(854, answer)
 
 
 if __name__ == '__main__':

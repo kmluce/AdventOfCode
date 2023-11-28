@@ -15,6 +15,7 @@ class Monkey:
     def print_monkey_name(self):
         print(self.monkey_id, end=" ")
 
+
 class GroupOfMonkeys:
 
     def __init__(self, first_monkey: Monkey):
@@ -31,13 +32,14 @@ class GroupOfMonkeys:
         for monkey in self.monkey_group:
             monkey.print_monkey_name()
 
+
 class Puzzle:
     fileName: str
 
     def __init__(self, file_name, puzzle_part):
         self.fileName = file_name
         self.puzzle_part = puzzle_part
-        self.monkey_group: GroupOfMonkeys = None
+        self.monkey_group: GroupOfMonkeys | None = None
 
     def parse(self):
         curr_monkey = -1
@@ -84,7 +86,7 @@ class Puzzle:
                                                     curr_true, curr_false))
             else:
                 self.monkey_group = GroupOfMonkeys(Monkey(curr_monkey, curr_items, curr_op,
-                                                  curr_test, curr_true, curr_false))
+                                                          curr_test, curr_true, curr_false))
 
     def print(self):
         pass

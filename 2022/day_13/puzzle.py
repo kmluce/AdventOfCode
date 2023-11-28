@@ -31,7 +31,8 @@ class Puzzle:
         if self.debug_level > 2:
             print("  initial copy list is", self.sorted_packet_list, "and length=", len(self.sorted_packet_list))
         for item in self.packet_list:
-            if self.debug_level > 1: print("INSERTING item", item, "into list")
+            if self.debug_level > 1:
+                print("INSERTING item", item, "into list")
             if len(self.sorted_packet_list) == 0:
                 self.sorted_packet_list.append(item)
                 if self.debug_level > 2:
@@ -69,8 +70,10 @@ class Puzzle:
                             self.right_assigned = True
                             # print("right =", self.right)
                     else:
-                        if self.debug_level > 1: print("")
-                        if self.debug_level > 1: print("== Pair", self.curr_index)
+                        if self.debug_level > 1:
+                            print("")
+                        if self.debug_level > 1:
+                            print("== Pair", self.curr_index)
                         order = self.check_order(self.left, self.right)
                         if self.debug_level > 1:
                             if order == LEFT:
@@ -86,8 +89,10 @@ class Puzzle:
                         if order == LEFT:
                             self.in_order_indexes.append(self.curr_index)
                         self.curr_index += 1
-                if self.debug_level > 1: print("")
-                if self.debug_level > 1: print("== Pair", self.curr_index)
+                if self.debug_level > 1:
+                    print("")
+                if self.debug_level > 1:
+                    print("== Pair", self.curr_index)
                 order = self.check_order(self.left, self.right)
                 if self.debug_level > 1:
                     if order == LEFT:
@@ -120,7 +125,8 @@ class Puzzle:
                 print("  ", item)
 
     def check_order(self, left, right):
-        if self.debug_level >= 4: print("comparing", left, "to", right)
+        if self.debug_level >= 4:
+            print("comparing", left, "to", right)
         if type(left) is str and type(right) is str:
             # print("  both are strings")
             pass
@@ -151,7 +157,7 @@ class Puzzle:
                         return RIGHT
                     elif sub_order == LEFT:
                         return LEFT
-                    elif index == len(left)-1 and index < len(right)-1:
+                    elif index == len(left) - 1 and index < len(right) - 1:
                         # print("      returning 2 because index", index, "does not exist in left list")
                         return LEFT
         else:

@@ -169,11 +169,11 @@ class DropMap:
             self.debugContext.print(2, f"so is {self.cycle_length} long,")
             self.debugContext.print(2, f"and adds {self.each_cycle_adds_height} to the height")
             height_from_cycles = (((
-                                               self.num_rocks - 1) - self.current_rock) // self.cycle_length) * self.each_cycle_adds_height
+                                           self.num_rocks - 1) - self.current_rock) // self.cycle_length) * self.each_cycle_adds_height
             num_leftover_rocks = (self.num_rocks - self.current_rock) % self.cycle_length
             self.debugContext.print(2, f"num leftover rocks is {num_leftover_rocks}")
             height_from_partial_cycle = sum(self.max_height_differential[self.cycle_begin: self.cycle_begin + (
-                        (self.num_rocks - self.current_rock) % self.cycle_length)])
+                    (self.num_rocks - self.current_rock) % self.cycle_length)])
             self.debugContext.print(2,
                                     f"adding values from beginning of cycle to {self.cycle_begin + ((self.num_rocks - self.current_rock) % self.cycle_length)}")
             self.debugContext.print(2,

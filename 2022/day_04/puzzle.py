@@ -10,20 +10,19 @@ class Puzzle:
 
     def parse(self):
         with open(self.fileName) as file:
-            tmp_line = []
             for line in file:
                 line = line.rstrip()
-        #        print (line)
+                #        print (line)
                 tmp_line = line.split(",")
-        #        print("  ", tmp_line)
+                #        print("  ", tmp_line)
                 tmp_range = tmp_line[0].split("-")
-        #        print("     ", tmp_range)
-                self.set1 = set([*range(int(tmp_range[0]), int(tmp_range[1])+1,)])
-        #        print("         ", self.set1)
+                #        print("     ", tmp_range)
+                self.set1 = {*range(int(tmp_range[0]), int(tmp_range[1]) + 1, )}
+                #        print("         ", self.set1)
                 tmp_range = tmp_line[1].split("-")
-        #        print("     ", tmp_range)
-                self.set2 = set([*range(int(tmp_range[0]), int(tmp_range[1])+1,)])
-        #        print("         ", self.set2)
+                #        print("     ", tmp_range)
+                self.set2 = {*range(int(tmp_range[0]), int(tmp_range[1]) + 1, )}
+                #        print("         ", self.set2)
                 set_intersection = self.set1.intersection(self.set2)
                 if self.puzzle_part == "a":
                     if not self.set1.difference(set_intersection):
@@ -39,5 +38,5 @@ class Puzzle:
 
     def solve(self):
         self.print()
-        #if self.puzzle_part == "a":
+        # if self.puzzle_part == "a":
         return self.num_intersections

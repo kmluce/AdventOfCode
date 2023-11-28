@@ -6,8 +6,8 @@ class Puzzle:
         self.puzzle_part = puzzle_part
         self.num_tails = num_tails
         self.head = [0, 0]
-        self.tails = [[0, 0] for i in range(0, num_tails)]
-        self.rope = [[0, 0] for i in range(0, num_tails + 1)]
+        self.tails = [[0, 0] for _ in range(0, num_tails)]
+        self.rope = [[0, 0] for _ in range(0, num_tails + 1)]
         self.tail_visited = set()
         self.tail_visited.add(tuple(self.rope[1]))
         self.max_x = 0
@@ -32,17 +32,17 @@ class Puzzle:
                 self.rope[0][0] += 1
             case 'U':
                 self.rope[0][0] -= 1
-        #print("after head move:")
-        #self.print()
+        # print("after head move:")
+        # self.print()
         self.move_tails()
-        #print("after tail move:")
-        #self.print()
+        # print("after tail move:")
+        # self.print()
 
     def move_tail(self, tail_no):
         x_diff = self.rope[tail_no - 1][1] - self.rope[tail_no][1]
         y_diff = self.rope[tail_no - 1][0] - self.rope[tail_no][0]
         if abs(x_diff) > 1 or abs(y_diff) > 1:
-            if (abs(x_diff) + abs(y_diff)) > 2: # move diagonally
+            if (abs(x_diff) + abs(y_diff)) > 2:  # move diagonally
                 if x_diff < 1:
                     self.rope[tail_no][1] -= 1
                 elif x_diff >= 1:
@@ -66,8 +66,8 @@ class Puzzle:
     def move_tails(self):
         for i in range(1, self.num_tails + 1):
             self.move_tail(i)
-        #print("rope:", self.rope)
-        #print("   adding tail location:", self.rope[self.num_tails])
+        # print("rope:", self.rope)
+        # print("   adding tail location:", self.rope[self.num_tails])
 
         self.tail_visited.add(tuple(self.rope[self.num_tails]))
 
@@ -87,21 +87,21 @@ class Puzzle:
         map_size_y = max(max(y_coords) - min(y_coords) + 1, abs(self.tails[0][0]), abs(self.tails[0][0]))
         map_size_x = max(max(x_coords) - min(x_coords) + 1, abs(self.tails[0][1]), abs(self.tails[0][1]))
         print("    making rope map of size", map_size_y, map_size_x)
-        ropemap = [['.' for x in range(0, map_size_x + 3)] for y in range(0, map_size_y + 3)]
+        rope_map = [['.' for _ in range(0, map_size_x + 3)] for _ in range(0, map_size_y + 3)]
         for i in range(0, len(x_coords)):
-            ropemap[y_coords[i] - adj_y][x_coords[i] - adj_x] = "#"
-        ropemap[self.tails[0][0] - adj_y][self.tails[0][1] - adj_x] = "H"
+            rope_map[y_coords[i] - adj_y][x_coords[i] - adj_x] = "#"
+        rope_map[self.tails[0][0] - adj_y][self.tails[0][1] - adj_x] = "H"
         print("      setting Head at", self.tails[0][0] - adj_y, self.head[1] - adj_x)
-        ropemap[self.tails[0][0] - adj_y][self.tails[0][1] - adj_x] = "T"
+        rope_map[self.tails[0][0] - adj_y][self.tails[0][1] - adj_x] = "T"
         print("      setting Tail at", self.tails[0][0] - adj_y, self.tails[0][1] - adj_x)
-        for line in ropemap:
+        for line in rope_map:
             print("    ", line)
-        #print("want to put head at:", self.head[0] - adj_y, self.head[1] - adj_x)
+        # print("want to put head at:", self.head[0] - adj_y, self.head[1] - adj_x)
 
     def solve(self):
-        #self.print()
+        # self.print()
         if self.puzzle_part == "a":
             return len(self.tail_visited)
         else:
             return len(self.tail_visited)
-            #return 0
+            # return 0

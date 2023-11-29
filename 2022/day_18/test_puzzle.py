@@ -7,9 +7,14 @@ class MyTestCase(unittest.TestCase):
     def test_demo_part_a(self):
         demo_a = Puzzle("demo_data1.txt", "a", 1)
         answer = demo_a.solve()
-        self.assertEqual(-1, answer)
+        self.assertEqual(10, answer)
 
-    @unittest.skip("Skipping testing part A with real data, not yet implemented")
+    def test_demo_part_a2(self):
+        demo_a = Puzzle("demo_data2.txt", "a", 1)
+        answer = demo_a.solve()
+        self.assertEqual(64, answer)
+
+    # @unittest.skip("Skipping testing part A with real data, not yet implemented")
     def test_part_a(self):
         part_a = Puzzle("test_data.txt", "a", 1)
         answer = part_a.solve()

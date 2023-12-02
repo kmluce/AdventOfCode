@@ -18,26 +18,32 @@ class Puzzle:
     def print(self):
         pass
 
+    @staticmethod
+    def findall(p, s):
+        i = s.find(p)
+        while i != -1:
+            yield i
+            i = s.find(p, i + 1)
+
+    def find_numbers_in_string(self, line):
+        numbers = {'one': '1', 'two': '2', 'three': '3', 'four': '4', 'five': '5', 'six': '6', 'seven': '7',
+                   'eight': '8', 'nine': '9'}
+        positions = []
+        for i in numbers.keys():
+            positions.extend([(x, numbers[i]) for x in self.findall(i, line)])
+        positions.extend([(ind, s) for ind, s in enumerate(list(line)) if s.isdigit()])
+        positions.sort()
+        return [i[1] for i in positions]
+
     def parse(self):
         with open(self.fileName) as file:
             for line in file:
                 if line.rstrip():
                     line = line.rstrip()
-                    print('line:', line)
                     if self.puzzle_part == 'b':
-                        line.replace('one', '1')
-                        line.replace('two', '2')
-                        line.replace('three', '3')
-                        line.replace('four', '4')
-                        line.replace('five', '5')
-                        line.replace('six', '6')
-                        line.replace('seven', '7')
-                        line.replace('eight', '8')
-                        line.replace('nine', '9')
-                    print('line after replacement:', line)
-                    calibration_numbers = [s for s in list(line) if s.isdigit()]
-                    print('calibration numbers:', calibration_numbers)
-                    print('adding these:', int(calibration_numbers[0] + calibration_numbers[-1]))
+                        calibration_numbers = self.find_numbers_in_string(line)
+                    else:
+                        calibration_numbers = [s for s in list(line) if s.isdigit()]
                     self.total_num += int(calibration_numbers[0] + calibration_numbers[-1])
                 else:
                     pass

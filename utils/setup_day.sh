@@ -60,7 +60,7 @@ echo "Setting up directory for Advent of Code year $MY_YEAR, day $MY_DAY."
 DATE_DIR=$(printf "%d/day_%02d" "$MY_YEAR" "$MY_DAY")
 MY_DIR="$BASE_PATH/$DATE_DIR"
 
-if [ -e "$MY_DIR" ]; then
+if [ -e "$MY_DIR" -a $COPY_TEMPLATES -eq 1 ]; then
     cl_exit_error "Directory $MY_DIR already exists.  Cowardly refusing to overwrite existing directory"
 fi
 

@@ -50,13 +50,14 @@ class Puzzle:
             print("")
 
     def initialize_sand_map(self):
-        self.sand_map = [[EMPTY for x in range(0, self.x_size + 1)] for y in range(0, self.y_size + 1)]
+        self.sand_map = [[EMPTY for _ in range(0, self.x_size + 1)] for _ in range(0, self.y_size + 1)]
         for coords_list in self.rock_paths:
             self.print_debug(3, f"Path: {coords_list!r}")
             [curr_x, curr_y] = coords_list.pop(0)
             curr_x = curr_x - self.shift_x
             curr_y = curr_y - self.shift_y
-            self.print_debug(4, f"setting path at {curr_y}, {curr_x}  ({curr_y - self.shift_y}, {curr_x - self.shift_x})")
+            self.print_debug(4,
+                             f"setting path at {curr_y}, {curr_x}  ({curr_y - self.shift_y}, {curr_x - self.shift_x})")
             self.sand_map[curr_y][curr_x] = ROCK
             for [new_x, new_y] in coords_list:
                 new_x = new_x - self.shift_x
@@ -81,8 +82,8 @@ class Puzzle:
                 curr_x = new_x
                 curr_y = new_y
         if self.puzzle_part == 'b':
-            self.sand_map.append([ROCK for x in range(0, self.x_size + 1)])
-            self.sand_map.append([EMPTY for x in range(0, self.x_size + 1)])
+            self.sand_map.append([ROCK for _ in range(0, self.x_size + 1)])
+            self.sand_map.append([EMPTY for _ in range(0, self.x_size + 1)])
 
     def parse(self):
         self.print_run_info()
@@ -116,7 +117,6 @@ class Puzzle:
 
     def drop_sand(self):
         infinite_sand = False
-        grain_blocked = False
         while not infinite_sand:
             x = self.source_x
             y = self.source_y

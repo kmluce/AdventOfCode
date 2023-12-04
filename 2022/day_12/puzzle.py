@@ -21,7 +21,7 @@ class Puzzle:
                 if line.rstrip():
                     line = line.rstrip()
                     self.input_map.append([x for x in line])
-                    curr_y = len(self.input_map)-1
+                    curr_y = len(self.input_map) - 1
                     # print("line is:", line)
                     # print("map line is:", self.input_map[curr_y])
                     if 'S' in self.input_map[curr_y]:
@@ -32,9 +32,9 @@ class Puzzle:
                         # print("    E in ", line)
                         self.end_coords = [curr_y, self.input_map[curr_y].index('E')]
                         self.input_map[self.end_coords[0]][self.end_coords[1]] = 'z'
-                    self.elevation_map.append([ord(x)-96 for x in self.input_map[curr_y]])
-                    self.distance_map.append([self.INFINITY for x in line])
-                    self.visited.append([False for x in line])
+                    self.elevation_map.append([ord(x) - 96 for x in self.input_map[curr_y]])
+                    self.distance_map.append([self.INFINITY for _ in line])
+                    self.visited.append([False for _ in line])
                     self.max_y = curr_y
                     self.max_x = len(self.elevation_map[curr_y]) - 1
                 else:
@@ -68,7 +68,7 @@ class Puzzle:
     def neighbors(self, coords):
         a = coords[0]
         b = coords[1]
-        potential_neighbors = [[a-1, b], [a+1, b], [a, b-1], [a, b+1]]
+        potential_neighbors = [[a - 1, b], [a + 1, b], [a, b - 1], [a, b + 1]]
         # [lst for lst in potential_neighbors if 3<=lst[0]<=6 and 0<=lst[1]<=5]
         neighbors = [lst for lst in potential_neighbors if 0 <= lst[0] <= self.max_y and 0 <= lst[1] <= self.max_x]
         return neighbors
@@ -76,7 +76,7 @@ class Puzzle:
     def unvisited_neighbors(self, coords):
         a = coords[0]
         b = coords[1]
-        potential_neighbors = [[a-1, b], [a+1, b], [a, b-1], [a, b+1]]
+        potential_neighbors = [[a - 1, b], [a + 1, b], [a, b - 1], [a, b + 1]]
         # [lst for lst in potential_neighbors if 3<=lst[0]<=6 and 0<=lst[1]<=5]
         neighbors = [lst for lst in potential_neighbors if 0 <= lst[0] <= self.max_y and 0 <= lst[1] <= self.max_x]
         # print("    checking if neighbors are visited:", coords, neighbors)
@@ -112,7 +112,7 @@ class Puzzle:
             self.queue.sort(key=self.distance)
             # self.print()
         self.print()
-        solutions_space = [self.distance([a,b]) for a in range(0,self.max_y + 1) for b in range(0,self.max_x + 1) if
+        solutions_space = [self.distance([a, b]) for a in range(0, self.max_y + 1) for b in range(0, self.max_x + 1) if
                            self.elevation_map[a][b] == 1 and self.distance([a, b]) != self.INFINITY]
         # print("solutions space is", solutions_space)
         return min(solutions_space)

@@ -7,7 +7,7 @@ class MyTestCase(unittest.TestCase):
         demoa = Puzzle("demo_data.txt", "a")
         demoa.parse()
         answer = demoa.solve()
-        self.assertEqual(-1, answer)
+        self.assertEqual(4, answer)
 
 #    def test_part_a(self):
 #        parta = Puzzle("test_data.txt", "a")

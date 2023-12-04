@@ -60,8 +60,8 @@ class Puzzle:
 
     def map_coords(self):
         self.print_debug(2, f"setting up coords with min {self.min_input_coords[0]},"
-                         f"{self.min_input_coords[1]} and max {self.max_input_coords[0]}"
-                         f", {self.max_input_coords[1]}")
+                            f"{self.min_input_coords[1]} and max {self.max_input_coords[0]}"
+                            f", {self.max_input_coords[1]}")
         self.print_debug(2, f"map size is {self.x_size}, {self.y_size}")
         self.sensor_reach_map = [["." for _x in range(0, self.x_size + 1)] for _y in range(0, self.y_size + 1)]
         self.print_debug(4, f"actual map size is{len(self.sensor_reach_map)}, {len(self.sensor_reach_map[0])}")
@@ -83,7 +83,7 @@ class Puzzle:
                     break
         # print(no_beacon)
         print(len(no_beacon))
-        return len([x for y in no_beacon if y not in self.beacons])
+        return len([y for y in no_beacon if y not in self.beacons])
 
     def sensor_intersection(self, y):
         intersections = []
@@ -113,13 +113,13 @@ class Puzzle:
         return consolidated_segments
 
     def solve_part_a(self, y):
-        nonbeacon_points = 0
+        non_beacon_points = 0
         consolidated_segments = self.sensor_intersection(y)
         for segment in consolidated_segments:
-            nonbeacon_points += segment[1][0] - segment[0][0]
-        return nonbeacon_points
+            non_beacon_points += segment[1][0] - segment[0][0]
+        return non_beacon_points
 
-    def solve_part_b(self, min_xy, max_xy):
+    def solve_part_b(self, max_xy):
         intersections = []
         for curr_y in range(0, max_xy + 1):
             points = 0
@@ -151,6 +151,6 @@ class Puzzle:
             return self.solve_part_a(2000000)
             # return self.num_beacons(2000000)
         elif self.puzzle_part == "b" and self.fileName == "demo_data.txt":
-            return self.solve_part_b(0,20)
+            return self.solve_part_b(20)
         elif self.puzzle_part == "b" and self.fileName == "test_data.txt":
-            return self.solve_part_b(0,4000000)
+            return self.solve_part_b(4000000)

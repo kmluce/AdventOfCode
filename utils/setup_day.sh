@@ -1,6 +1,6 @@
 #!/bin/bash
 
-BASE_PATH="/Users/luce/PycharmProjects/pythonProject/AdventOfCode"
+BASE_PATH="/Users/kathleen/PycharmProjects/AdventOfCode"
 AOCD_PATH="venv/bin/"
 TEMPLATE_DIR="$BASE_PATH/template"
 AOCD_BIN="$BASE_PATH/$AOCD_PATH/aocd"

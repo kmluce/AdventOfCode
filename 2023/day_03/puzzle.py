@@ -11,6 +11,7 @@ class EngineMap:
         self.symbol_map = []
         self.parts_value = 0
         self.parts = set()
+        self.digits_re = re.compile('\d+')
 
     def add_line(self, line):
         self.debug.print(3, f"adding line: {line}")
@@ -18,20 +19,23 @@ class EngineMap:
         current_line_no = len(self.engine_map) - 1
         self.debug.increase_indent()
         self.debug.print(3, f"current line number is: {current_line_no}")
-        numbers_in_line = re.findall('\d+', line)
-        self.debug.print(3, f"found numbers {numbers_in_line}")
-        self.debug.decrease_indent()
-        for number in numbers_in_line:
-            for location in [m.start() for m in re.finditer(number, line)]:
-                self.adjacency_map[(number, current_line_no, location)] = []
-                self.adjacency_map[(number, current_line_no, location)].append([current_line_no, location - 1])
-                self.adjacency_map[(number, current_line_no, location)].append(
-                    [current_line_no, location + len(number)])
-                for i in range(location - 1, location + len(number) + 1):
-                    self.adjacency_map[(number, current_line_no, location)].append([current_line_no - 1, i])
-                    self.adjacency_map[(number, current_line_no, location)].append([current_line_no + 1, i])
+        # This is the bug:  finding numbers instead of matches leaves us open to substring bugs later.
+        numbers_in_line = []
+        for digits_match in re.finditer(self.digits_re, line):
+            number = digits_match.group(0)
+            numbers_in_line.append(number)
+            location = digits_match.start()
+            self.adjacency_map[(number, current_line_no, location)] = []
+            self.adjacency_map[(number, current_line_no, location)].append([current_line_no, location - 1])
+            self.adjacency_map[(number, current_line_no, location)].append(
+                [current_line_no, location + len(number)])
+            for i in range(location - 1, location + len(number) + 1):
+                self.adjacency_map[(number, current_line_no, location)].append([current_line_no - 1, i])
+                self.adjacency_map[(number, current_line_no, location)].append([current_line_no + 1, i])
             self.debug.print(3,
                              f"adjacency map for {number} is {self.adjacency_map[(number, current_line_no, location)]}")
+        self.debug.decrease_indent()
+        self.debug.print(3, f"found numbers {numbers_in_line}")
         for symbol in [m.start() for m in re.finditer('[^\d.]', line)]:
             self.symbol_map.append([current_line_no, symbol])
 
@@ -46,7 +50,6 @@ class EngineMap:
         self.debug.print(2, f"parts:  {self.parts}")
         self.parts_value = sum([int(_x[0]) for _x in self.parts])
         return self.parts_value
-
 
     def print_map(self):
         self.debug.print(2, f"Current Engine Map:")

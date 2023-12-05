@@ -13,7 +13,7 @@ class MyTestCase(unittest.TestCase):
     def test_part_a(self):
         part_a = Puzzle("test_data.txt", "a", 4)
         answer = part_a.solve()
-        self.assertEqual(-1, answer)
+        self.assertEqual(507214, answer)
 
     # @unittest.skip("Skipping testing part B with demo data, not yet implemented")
     # def test_demo_part_b(self):

@@ -12,6 +12,8 @@ class EngineMap:
         self.parts_value = 0
         self.parts = set()
         self.digits_re = re.compile('\d+')
+        self.star_map = []
+        self.gear_total = 0
 
     def add_line(self, line):
         self.debug.print(3, f"adding line: {line}")
@@ -38,6 +40,8 @@ class EngineMap:
         self.debug.print(3, f"found numbers {numbers_in_line}")
         for symbol in [m.start() for m in re.finditer('[^\d.]', line)]:
             self.symbol_map.append([current_line_no, symbol])
+        for star_match in re.finditer('\*', line):
+            self.star_map.append([current_line_no, star_match.start()])
 
     def find_parts(self):
         for i in self.symbol_map:
@@ -50,6 +54,21 @@ class EngineMap:
         self.debug.print(2, f"parts:  {self.parts}")
         self.parts_value = sum([int(_x[0]) for _x in self.parts])
         return self.parts_value
+
+    def find_gears(self):
+        for i in self.star_map:
+            star_matches = []
+            self.debug.print(2, f"finding matches for star at {i}")
+            self.debug.increase_indent()
+            for val_tuple, adjacent_coordinates in self.adjacency_map.items():
+                if i in adjacent_coordinates:
+                    self.debug.print(3, f"{val_tuple} is adjacent to star at {i}")
+                    star_matches.append(val_tuple)
+            if len(star_matches) == 2:
+                self.debug.print(2, f"star at {i} is a gear")
+                self.gear_total += (int(star_matches[0][0]) * int(star_matches[1][0]))
+            self.debug.decrease_indent()
+        return self.gear_total
 
     def print_map(self):
         self.debug.print(2, f"Current Engine Map:")
@@ -92,4 +111,4 @@ class Puzzle:
         if self.puzzle_part == "a":
             return self.my_engine_map.find_parts()
         else:
-            return 0
+            return self.my_engine_map.find_gears()

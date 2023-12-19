@@ -25,7 +25,7 @@ class MyTestCase(unittest.TestCase):
     def test_part_b(self):
         part_b = Puzzle("test_data.txt", "b", 1)
         answer = part_b.solve()
-        self.assertEqual(-1, answer)
+        self.assertEqual(34039469, answer)
 
 
 if __name__ == '__main__':

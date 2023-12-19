@@ -20,9 +20,10 @@ class ConversionMap:
         self.debug.increase_indent()
         self.debug.print(2, f"with conversion codes {conversion_codes}")
         for dest_range_start, source_range_start, range_length in conversion_codes:
-            source_range_end = source_range_start + range_length
-            offset = dest_range_start - source_range_start
-            self.map.append([source_range_start, source_range_end, offset])
+            if range_length > 0:
+                source_range_end = source_range_start + range_length
+                offset = dest_range_start - source_range_start
+                self.map.append([source_range_start, source_range_end, offset])
         self.debug.print(2, f"resulting in maps: {self.map}")
         self.debug.decrease_indent()
         self.debug.decrease_indent()
@@ -35,6 +36,71 @@ class ConversionMap:
         else:
             self.debug.print(3, f"{self.name} mapping value {value} to {value}")
             return value
+
+    def map_intervals(self, intervals):
+        new_interval_list = []
+        self.debug.increase_indent()
+        self.debug.print(3, f"{self.name} mapping ranges {intervals}")
+        self.debug.increase_indent()
+        self.debug.print(3, f"using maps {self.map}")
+        while len(intervals) > 0:
+            interval = intervals.pop()
+            self.debug.increase_indent()
+            self.debug.print(7, f"checking maps for {interval}, using {interval[0]}")
+            # self.debug.print(7, f"x[0] values for maps are {[x[0] for x in self.map]}")
+            # self.debug.print(7, f"x[1] values for maps are {[x[1] for x in self.map]}")
+            mapping = [x for x in self.map if max(interval[0], x[0]) <= min(interval[1], x[1])]
+            if mapping:
+                self.debug.increase_indent()
+                self.debug.print(7, f"found map for interval {interval}: {mapping}")
+                self.debug.decrease_indent()
+                offset = mapping[0][2]
+                self.debug.increase_indent()
+                if interval[0] <= mapping[0][0]:
+                    if interval[1] <= mapping[0][1]:  # case: interval overlaps on left side of map
+                        self.debug.print(6, f"interval {interval} overlaps map {mapping[0][0]}, {mapping[0][1]} on left side")
+                        self.debug.increase_indent()
+                        self.debug.print(6, f"splitting into [{interval[0]}, {mapping[0][0] -1}], [{mapping[0][0]}, {interval[1]}:+ {offset}]")
+                        self.debug.decrease_indent()
+                        if interval[0] < mapping[0][0]:
+                            intervals.append((interval[0], mapping[0][0] - 1))  # could match another map
+                        new_interval_list.append((mapping[0][0] + offset, interval[1] + offset))
+                    else:  # case: map entirely contained in interval
+                        self.debug.print(6, f"interval {interval} entirely contains map {mapping[0][0]}, {mapping[0][1]}")
+                        self.debug.increase_indent()
+                        self.debug.print(6, f"splitting into [{interval[0]}, {mapping[0][0] -1}], [{mapping[0][0]}, {mapping[0][1]}: +{offset}], and [{mapping[0][1] +1}, {interval[1]}]")
+                        self.debug.decrease_indent()
+                        if interval[0] < mapping[0][0]:
+                            intervals.append((interval[0], mapping[0][0] - 1))  # could match another map
+                        if interval[1] > mapping[0][1]:
+                            intervals.append((mapping[0][1] + 1, interval[1]))  # could match another map
+                        new_interval_list.append((mapping[0][0] + offset, mapping[0][1] + offset))
+                else:
+                    if interval[1] <= mapping[0][1]:  # case: interval entirely contained in map
+                        self.debug.print(6, f"interval {interval} entirely contained by map {mapping[0][0]}, {mapping[0][1]}")
+                        self.debug.increase_indent()
+                        self.debug.print(6, f"returning [{interval[0]}, {interval[1]}: + {offset}]")
+                        self.debug.decrease_indent()
+                        new_interval_list.append((interval[0] + offset, interval[1] + offset))
+                    else:   # case: interval overlaps right side of map
+                        self.debug.print(6, f"interval {interval} overlaps map {mapping[0][0]}, {mapping[0][1]} on right side")
+                        self.debug.increase_indent()
+                        self.debug.print(6, f"splitting into [{interval[0]}, {mapping[0][1]}: + {offset}], [{mapping[0][1] +1 }, {interval[1]}]")
+                        self.debug.decrease_indent()
+                        intervals.append((mapping[0][1] + 1, interval[1]))
+                        new_interval_list.append((interval[0] + offset, mapping[0][1] + offset))
+                self.debug.decrease_indent()
+            else:
+                self.debug.print(6, f"no map found for interval {interval}")
+                self.debug.increase_indent()
+                self.debug.print(6, f"passing [{interval[0]}, {interval[1]}] unchanged")
+                self.debug.decrease_indent()
+                new_interval_list.append(interval)
+            self.debug.decrease_indent()
+        self.debug.print(3, f"{self.name} returning ranges {new_interval_list}")
+        self.debug.decrease_indent()
+        self.debug.decrease_indent()
+        return new_interval_list
 
 
 class Puzzle:
@@ -54,6 +120,8 @@ class Puzzle:
         self.temperature_to_humidity_map = ConversionMap("temp to humid", self.debug)
         self.humidity_to_location_map = ConversionMap("humid to loc", self.debug)
         self.lowest_location = -1
+        self.initial_seed_intervals = []
+        self.final_seed_intervals = []
 
     def print_run_info(self):
         self.debug.print(1, f"{chr(10)}PUZZLE RUN:  running part {self.puzzle_part} with file "
@@ -106,7 +174,8 @@ class Puzzle:
                     current_map.set_conversion_codes(mappings)
 
     def chunker(self, seq, size):
-        return(seq[pos:pos + size] for pos in range(0,len(seq), size))
+        return (seq[pos:pos + size] for pos in range(0, len(seq), size))
+
     def get_seeds(self):
         if self.puzzle_part == "a":
             self.debug.print(2, f"returning {self.seeds}")
@@ -147,6 +216,6 @@ class Puzzle:
                 self.debug.print(1, f"seed {i} maps to {self.seed_to_soil_map.map_value(i)}")
             return self.find_lowest_location()
         else:
-            for i in self.seeds:
-                self.debug.print(1, f"seed {i} maps to {self.seed_to_soil_map.map_value(i)}")
-            return self.find_lowest_location()
+            self.calculate_initial_seed_intervals()
+            self.calculate_final_seed_intervals()
+            return min([x[0] for x in self.final_seed_intervals])

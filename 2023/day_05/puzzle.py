@@ -176,6 +176,21 @@ class Puzzle:
     def chunker(self, seq, size):
         return (seq[pos:pos + size] for pos in range(0, len(seq), size))
 
+    def calculate_initial_seed_intervals(self):
+        for group in self.chunker(self.seeds, 2):
+            self.debug.increase_indent()
+            self.debug.print(2, f"found chunk {group}")
+            self.initial_seed_intervals.append((group[0], group[0] + group[1]))
+            self.debug.decrease_indent()
+
+    def calculate_final_seed_intervals(self):
+        self.final_seed_intervals = self.humidity_to_location_map.map_intervals(
+            self.temperature_to_humidity_map.map_intervals(
+                self.light_to_temperature_map.map_intervals(self.water_to_light_map.map_intervals(
+                    self.fertilizer_to_water_map.map_intervals(
+                        self.soil_to_fertilizer_map.map_intervals(
+                            self.seed_to_soil_map.map_intervals(self.initial_seed_intervals)))))))
+
     def get_seeds(self):
         if self.puzzle_part == "a":
             self.debug.print(2, f"returning {self.seeds}")

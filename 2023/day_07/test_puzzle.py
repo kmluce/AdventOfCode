@@ -25,19 +25,19 @@ class MyTestCase(unittest.TestCase):
     def test_part_a(self):
         part_a = Puzzle("test_data.txt", "a", 1)
         answer = part_a.solve()
-        self.assertEqual(-1, answer)
+        self.assertEqual(250957639, answer)
 
-    @unittest.skip("Skipping testing part B with demo data, not yet implemented")
+    # @unittest.skip("Skipping testing part B with demo data, not yet implemented")
     def test_demo_part_b(self):
         demo_b = Puzzle("demo_data1.txt", "b", 1)
         answer = demo_b.solve()
-        self.assertEqual(-1, answer)
+        self.assertEqual(5905, answer)
 
-    @unittest.skip("Skipping testing part B with real data, not yet implemented")
+    # @unittest.skip("Skipping testing part B with real data, not yet implemented")
     def test_part_b(self):
         part_b = Puzzle("test_data.txt", "b", 1)
         answer = part_b.solve()
-        self.assertEqual(-1, answer)
+        self.assertEqual(251515496, answer)
 
 
 if __name__ == '__main__':

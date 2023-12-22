@@ -4,6 +4,10 @@ from utils.debugging import PrintDebug
 def card_hand_type(hand: str):
     hand_list = [*hand]
     unique_hand_values = set(hand_list)
+    return calc_hand_type(hand_list, unique_hand_values)
+
+
+def calc_hand_type(hand_list, unique_hand_values):
     sorted_counts = [hand_list.count(x) for x in list(unique_hand_values)]
     sorted_counts.sort(reverse=True)
     if sorted_counts == [5]:
@@ -20,8 +24,22 @@ def card_hand_type(hand: str):
         hand_type = 2
     else:
         hand_type = 1
-    print(f"hand type for {hand} is {hand_type}")
     return hand_type
+
+
+def joker_card_hand_type(hand: str):
+    hand_list = [*hand]
+    unique_hand_values = set(hand_list)
+    candidate_card_values = []
+    if 'J' in unique_hand_values:
+        for sub in unique_hand_values:
+            if sub == 'J':
+                pass
+            else:
+                candidate_hand = hand.replace('J', sub)
+                candidate_card_values.append(calc_hand_type([*candidate_hand], unique_hand_values.difference('J')))
+    candidate_card_values.append(calc_hand_type(hand_list, unique_hand_values))
+    return max(candidate_card_values)
 
 
 def card_value(face: str):
@@ -39,12 +57,34 @@ def card_value(face: str):
         return 14
 
 
+def joker_card_value(face: str):
+    if face.isnumeric():
+        return int(face)
+    elif face == 'T':
+        return 10
+    elif face == 'J':
+        return 1
+    elif face == 'Q':
+        return 12
+    elif face == 'K':
+        return 13
+    elif face == 'A':
+        return 14
+
+
 def card_hand_value(hand: str):
     hand_list = [*hand]
     hand_value = 0
     for card in hand_list:
         hand_value = hand_value * 100 + card_value(card)
-    print(f"hand value for {hand} is {hand_value}")
+    return hand_value
+
+
+def joker_card_hand_value(hand: str):
+    hand_list = [*hand]
+    hand_value = 0
+    for card in hand_list:
+        hand_value = hand_value * 100 + joker_card_value(card)
     return hand_value
 
 
@@ -84,6 +124,12 @@ class Puzzle:
         self.hands_sorted = sorted(self.hands_sorted, key=card_hand_type)
         print(self.hands_sorted)
 
+    def joker_sort_cards(self):
+        self.hands_sorted = sorted(self.hands, key=joker_card_hand_value)
+        print(self.hands_sorted)
+        self.hands_sorted = sorted(self.hands_sorted, key=joker_card_hand_type)
+        print(self.hands_sorted)
+
     def solve(self):
         self.parse()
         self.print()
@@ -91,4 +137,5 @@ class Puzzle:
             self.sort_cards()
             return sum([(i + 1) * self.hand_values[j] for i, j in enumerate(self.hands_sorted)])
         else:
-            return 0
+            self.joker_sort_cards()
+            return sum([(i + 1) * self.hand_values[j] for i, j in enumerate(self.hands_sorted)])

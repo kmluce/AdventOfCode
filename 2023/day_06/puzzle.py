@@ -29,20 +29,30 @@ class Puzzle:
         elif discriminate == 0:
             return [(-b / (2 * a))]
 
+    def get_race_solutions(self, time, distance):
+        lower_bound, upper_bound = self.real_quadratic(-1, time, distance * -1)
+        print(
+            f"got solutions {lower_bound}, {upper_bound} from race with time {time} and distance {distance}")
+        upper_floor = math.floor(upper_bound)
+        lower_floor = math.floor(lower_bound)
+        if lower_floor == lower_bound:
+            lower_floor += 1
+        return upper_floor - lower_floor
+
     def record_factor(self):
         total_record = 1
         for index, time in enumerate(self.times):
-            lower_bound, upper_bound = self.real_quadratic(-1, time, self.distances[index] * -1)
-            print(
-                f"got solutions {lower_bound}, {upper_bound} from race with time {time} and distance {self.distances[index]}")
-            upper_floor = math.floor(upper_bound)
-            # if upper_floor == upper_bound:
-            #    upper_floor = upper_floor - 1
-            lower_floor = math.floor(lower_bound)
-            if lower_floor == lower_bound:
-                lower_floor += 1
-            total_record *= upper_floor - lower_floor
+            total_record *= self.get_race_solutions(time, self.distances[index])
         return total_record
+
+    def cat_int_list(self, list_of_ints):
+        int_string = ""
+        for item in list_of_ints:
+            int_string = int_string + str(item)
+        return int(int_string)
+
+    def record_single_race(self):
+        return self.get_race_solutions(self.cat_int_list(self.times), self.cat_int_list(self.distances))
 
     def parse(self):
         with open(self.fileName) as file:
@@ -63,4 +73,4 @@ class Puzzle:
         if self.puzzle_part == "a":
             return self.record_factor()
         else:
-            return 0
+            return self.record_single_race()

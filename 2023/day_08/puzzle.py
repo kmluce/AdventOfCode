@@ -1,5 +1,6 @@
+import math
+from typing import Any
 from utils.debugging import PrintDebug
-import networkx as nx
 
 class Puzzle:
     fileName: str
@@ -21,12 +22,10 @@ class Puzzle:
         pass
 
     def run_map(self):
-        steps = 0
         curr_step = 0
         curr_node = self.beginning_node
-        dir_num = 0
         # print("directions is ", self.directions)
-        while (curr_node != self.end_state):
+        while curr_node != self.end_state:
             curr_step += 1
             direction = self.directions[(curr_step % len(self.directions)) -1]
             if direction == 'R':
@@ -37,6 +36,46 @@ class Puzzle:
             new_node = self.map[curr_node][dir_num]
             # print("new node is ", new_node, flush=True)
             curr_node = new_node
+        return curr_step
+
+    def shortest_path_to_z(self, node):
+        current_node = node
+        current_step = 0
+
+        while current_node[2] != 'Z':
+            current_step += 1
+            direction = self.directions[(current_step % len(self.directions)) - 1]
+            if direction == 'R':
+                next_node = self.map[current_node][1]
+            else:
+                next_node = self.map[current_node][0]
+            current_node = next_node
+        return current_step
+
+
+
+    def ghost_map(self):
+        current_nodes: list[Any] = [ i for i in self.map.keys() if i[2] == 'A' ]
+        answers = [ int(self.shortest_path_to_z(i)) for i in current_nodes ]
+        return math.lcm(*answers)
+
+    def parallel_run_map(self):
+        current_nodes = [ i for i in self.map.keys() if i[2] == 'A' ]
+        end_nodes = ['Z'] * len(current_nodes)
+        print(f"Starting Nodes: {current_nodes}")
+        print(f"End Nodes: {end_nodes}")
+        curr_step = 0
+
+        while [ i[2] for i in current_nodes ] != end_nodes:
+            curr_step += 1
+            direction = self.directions[(curr_step % len(self.directions)) - 1]
+            if direction == 'R':
+                next_nodes = [ self.map[i][1] for i in current_nodes ]
+            else:
+                next_nodes = [ self.map[i][0] for i in current_nodes ]
+            print(f"step {curr_step} nodes are {next_nodes}", flush=True)
+            current_nodes = next_nodes
+            # print(flush=True)
         return curr_step
 
     def parse(self):
@@ -56,9 +95,10 @@ class Puzzle:
                     pass
 
     def solve(self):
+        print()
         self.parse()
         self.print()
         if self.puzzle_part == "a":
             return self.run_map()
         else:
-            return 0
+            return self.ghost_map()

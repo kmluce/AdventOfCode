@@ -1,9 +1,10 @@
 from utils.debugging import PrintDebug
 
 class OasisDiagnostics:
-    def __init__(self, oasis_output):
+    def __init__(self, oasis_output, puzzle_part):
         self.oasis_output = oasis_output
         self.readout = [ [ int(i) for i in oasis_output.split(" ")]]
+        self.puzzle_part = puzzle_part
         # self.print_oasis()
         self.hydrate()
 
@@ -12,10 +13,18 @@ class OasisDiagnostics:
             self.readout.append([self.readout[-1][i] - self.readout[-1][i-1] for i in range(1, len(self.readout[-1]))])
         self.readout.append([0] * (len(self.readout[-1]) -1 ))
         # self.print_oasis()
-        self.extrapolate()
+        if self.puzzle_part == 'a':
+            self.extrapolate_forwards()
+        else:
+            self.extrapolate_backwards()
         self.print_oasis()
 
-    def extrapolate(self):
+    def extrapolate_backwards(self):
+        for i in range(len(self.readout)-2, -1, -1):
+            # print(i)
+            self.readout[i].insert(0, self.readout[i][0] - self.readout[i+1][0])
+
+    def extrapolate_forwards(self):
         # print(f"counting rows from {len(self.readout)-2} to 0")
         for i in range(len(self.readout)-2, -1, -1):
             # print(i)
@@ -24,8 +33,12 @@ class OasisDiagnostics:
     def print_oasis(self):
         print(f"{self.readout}")
 
-    def get_extrapolated_value(self):
+    def get_extrapolated_rvalue(self):
         return self.readout[0][-1]
+
+    def get_extrapolated_lvalue(self):
+        return self.readout[0][0]
+
 
 class Puzzle:
     fileName: str
@@ -53,7 +66,7 @@ class Puzzle:
             for line in file:
                 if line.rstrip():
                     line = line.rstrip()
-                    self.oasis_diagnostics.append(OasisDiagnostics(line))
+                    self.oasis_diagnostics.append(OasisDiagnostics(line, self.puzzle_part))
                     # self.print_puzzle()
                 else:
                     pass
@@ -64,6 +77,6 @@ class Puzzle:
         self.parse()
         # self.print_puzzle()
         if self.puzzle_part == "a":
-            return sum([ i.get_extrapolated_value() for i in self.oasis_diagnostics ])
+            return sum([ i.get_extrapolated_rvalue() for i in self.oasis_diagnostics ])
         else:
-            return 0
+            return sum([ i.get_extrapolated_lvalue() for i in self.oasis_diagnostics ])

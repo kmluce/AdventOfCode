@@ -14,3 +14,6 @@ class PrintDebug:
 
     def decrease_indent(self):
         self.indent = self.indent - 1
+
+    def set_debug_level(self, debug_level):
+        self.debug_level = debug_level

@@ -1,5 +1,10 @@
 # Repo-specific:
 202*/.idea
+**/day*/demo_data*.txt
+**/day*/test_data*.txt
+**/day*/example.txt
+**/day*/demo_answers*.txt
+**/test_data/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

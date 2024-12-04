@@ -112,7 +112,7 @@ for file in "$TMP_DIR"/*; do
         [ $QUIET -eq 0 ] && echo "Would copy $file to $MY_DIR, except that -x was specified"
     else
         [ $QUIET -eq 0 ] && echo "Copying $file to $MY_DIR, unless file already exists"
-        cp -n "$TMP_DIR/$file" "$MY_DIR"
+        cp -n "$file" "$MY_DIR"
     fi
 done
 

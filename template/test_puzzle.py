@@ -3,7 +3,7 @@ from puzzle import Puzzle
 
 
 class MyTestCase(unittest.TestCase):
-    @unittest.skip("Skipping testing part A with demo data, not yet implemented")
+    # @unittest.skip("Skipping testing part A with demo data, not yet implemented")
     def test_demo_part_a(self):
         demo_a = Puzzle("demo_data1.txt", "a", 1)
         answer = demo_a.solve()

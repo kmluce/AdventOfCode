@@ -16,6 +16,7 @@ class Puzzle:
         self.rule_breakers = []
         self.left_set = set()
         self.right_set = set()
+        self.rule_breakers_sum = 0
 
     def print_run_info(self):
         self.debug.print(1, f"{chr(10)}PUZZLE RUN:  running part {self.puzzle_part} with file "
@@ -69,12 +70,14 @@ class Puzzle:
             self.rule_breakers.append(page_list)
 
     def fix_rule_breakers(self):
-        left_rule_pages = []
-        right_rule_pages = []
+        left_rule_pages = {}
+        right_rule_pages = {}
+        print("rules are", self.rules)
         for page in self.left_set:
-            left_rule_pages[page] = set([x for x in self.rules[1] if self.rules[0] == page])
+            left_rule_pages[page] = set([x[1] for x in self.rules if x[0] == page])
+            print("left rule page for", page, "is", left_rule_pages[page])
         for page in self.right_set:
-            right_rule_pages[page] = set([x for x in self.rules[0] if self.rules[1] == page])
+            right_rule_pages[page] = set([x[0] for x in self.rules if x[1] == page])
         for page_list in self.rule_breakers:
             self.debug.print(1, f"current rule breaker is {page_list}")
             tmp_page_list = []
@@ -83,12 +86,26 @@ class Puzzle:
                 if len(tmp_page_list) == 0:
                     tmp_page_list.append(current_page)
                 else:
-                    for split in range(len(tmp_page_list)):
-                        self.debug.print(1, f"splitting at {split}")
-                        if (set(tmp_page_list[0:split]).isdisjoint(left_rule_pages[current_page])
-                            and set(tmp_page_list[split:-1]).isdisjoint(right_rule_pages[current_page])):
-                            tmp_page_list.insert(split, current_page)
-                self.debug.print(1, f"fully inserted list is {tmp_page_list}")
+                    if current_page in left_rule_pages.keys():
+                        if current_page in right_rule_pages.keys():
+                            for split in range(len(tmp_page_list)+1):
+                                self.debug.print(2, f"splitting at {split}")
+                                self.debug.print(2,f"current list is {tmp_page_list}")
+                                self.debug.print(2, f"testing to see if {tmp_page_list[0:split]} is disjoint from {left_rule_pages[current_page]}")
+                                self.debug.print(2, f"testing to see if {tmp_page_list[split:]} is disjoint from {right_rule_pages[current_page]}")
+                                if (set(tmp_page_list[0:split]).isdisjoint(left_rule_pages[current_page])
+                                        and set(tmp_page_list[split:]).isdisjoint(right_rule_pages[current_page])):
+                                    tmp_page_list.insert(split, current_page)
+                                    break
+                        else:
+                            tmp_page_list.insert(0, current_page)
+                    else:
+                        tmp_page_list.append(current_page)
+            self.debug.print(1, f"fully inserted list is {tmp_page_list}")
+            middle_index = int((len(tmp_page_list) - 1) / 2)
+            self.rule_breakers_sum += int(tmp_page_list[middle_index])
+        return self.rule_breakers_sum
+
 
         return 0
 

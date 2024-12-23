@@ -4,6 +4,7 @@
 **/day*/test_data*.txt
 **/day*/example.txt
 **/day*/demo_answers*.txt
+**/day*/test_puzzle.py
 **/test_data/
 
 # Byte-compiled / optimized / DLL files
